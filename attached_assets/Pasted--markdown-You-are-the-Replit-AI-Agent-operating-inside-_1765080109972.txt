@@ -1,0 +1,198 @@
+```markdown
+You are the Replit AI Agent operating inside a Replit workspace that is **already connected to a GitHub repository**.
+
+The GitHub repo contains a production web application (Node.js / Next.js 14 + TypeScript + Tailwind + Supabase + NOWPayments).  
+My goal: **have this project fully deployed and reachable via a stable Replit Deployment URL**, with a clean CI‑style build process and correct runtime configuration.
+
+Your job: **take this project from “cloned from GitHub” to “fully deployed and online” inside Replit**, handling everything you can end‑to‑end.
+
+---
+
+## 1. Understand and sync from GitHub
+
+1. Detect the linked GitHub repository for this Replit project.
+2. Confirm that the local branch (usually `main` or `master`) is in sync with the remote:
+   - Run:
+     ```bash
+     git status
+     git branch
+     git remote -v
+     ```
+   - If the branch is behind origin, pull the latest:
+     ```bash
+     git pull --rebase origin main || git pull --rebase origin master || true
+     ```
+3. Do **not** overwrite local work without reason. If there are merge conflicts:
+   - Resolve them carefully, preserving the working application code.
+   - Provide a brief explanation of conflicts and resolutions in your final summary.
+
+---
+
+## 2. Detect project type and required scripts
+
+1. Open `package.json` and verify:
+   - `"dev": "next dev"` (or equivalent dev script)
+   - `"build": "next build"` (or project build step)
+   - `"start": "next start -p ${PORT:-3000}"` (or other production start; must honour `$PORT` and bind `0.0.0.0`)
+2. If these scripts are missing or incorrect, **add or adjust them** to reflect a standard Node/Next.js deployment.
+3. Confirm Node version expectations from:
+   - `package.json` `engines` field, if present
+   - `.nvmrc` or documentation, if present
+
+---
+
+## 3. Configure the Replit runtime
+
+1. Open or create `replit.nix` (if the project uses Nix) and ensure it includes a recent Node runtime:
+
+   ```nix
+   { pkgs }: {
+     deps = [
+       pkgs.nodejs-20_x
+       pkgs.nodePackages.npm
+     ];
+   }
+   ```
+
+   Adjust if there is an existing, valid configuration.
+
+2. Configure the **Run** command for the interactive Replit environment:
+   - Prefer `.replit` or `replit.yaml` depending on this workspace’s convention.
+   - Ensure that when I click **Run**, Replit will:
+     ```bash
+     npm install
+     npm run dev -- --port 3000 --hostname 0.0.0.0
+     ```
+   - Confirm that the dev server is reachable on the configured port.
+
+---
+
+## 4. Install dependencies & ensure a clean build
+
+1. From the project root, run:
+
+   ```bash
+   npm install
+   ```
+
+2. Then run a full production build:
+
+   ```bash
+   npm run build
+   ```
+
+3. If there are any errors:
+   - Open the referenced files.
+   - Fix TypeScript, syntax, or config issues **in the source**, not by weakening the toolchain.
+   - Re‑run `npm run build` after each round of fixes until it passes.
+
+4. If the repo includes tests (e.g., `test`, `lint`, `check` scripts), run them as well:
+   ```bash
+   npm run lint  || true
+   npm run test  || true
+   ```
+   - Fix any **failing** tests or lints that are critical for production stability.
+
+---
+
+## 5. Environment variables & secrets
+
+This project likely needs environment variables such as (examples):
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY` (server-only)
+- `NOWPAYMENTS_API_KEY`
+- `NOWPAYMENTS_IPN_SECRET`
+- `NOWPAYMENTS_API_URL`
+- `NOWPAYMENTS_PAY_CURRENCY`
+- `FRONTEND_BASE_URL` (the deployment URL once known)
+
+Your tasks:
+
+1. Scan the codebase (`.env.example`, `README`, `lib/*`, etc.) for required env vars.
+2. Create or update a **machine-readable list** for me in your final message:
+   - Variable name
+   - Whether it is required
+   - Where it is used
+   - Whether it is public or secret
+3. Ensure that:
+   - The app reads them via `process.env.*`.
+   - No real secrets are committed into the repo.
+4. Configure the Replit **Secrets** (if your permissions allow) or clearly instruct me which keys to add manually in the Replit UI.
+
+---
+
+## 6. Configure production deployment in Replit
+
+Use Replit’s Deployment system to create a **Production** deployment.
+
+1. Determine the correct start command for production:
+   - Typically:
+     ```bash
+     npm run build && npm run start
+     ```
+2. Configure the deployment:
+   - Runtime: Node.js (use the same Node version as in `replit.nix` if possible).
+   - Build step: `npm install && npm run build`
+   - Run step: `npm run start`
+   - Expose the HTTP port as `$PORT`; ensure the app binds to `0.0.0.0`.
+3. Ensure the deployment picks up the same environment variables defined in Replit Secrets.
+4. If Replit uses a `replit.yaml` or similar configuration for deployments, generate/update it accordingly.
+
+---
+
+## 7. Health check & verification
+
+After creating the deployment:
+
+1. Trigger a deploy.
+2. Wait for the full deployment log to complete; capture any build/runtime errors.
+3. If deployment fails:
+   - Inspect the logs.
+   - Fix configuration or code problems.
+   - Re‑deploy until success.
+
+Once deployment is successful:
+
+1. Visit the deployment URL.
+2. Verify that:
+   - The root page loads without errors.
+   - Client & server consoles do not show fatal errors.
+   - Basic flows work:
+     - Homepage renders.
+     - Protocol library route loads.
+     - A detail page loads.
+3. If any route fails (e.g., 500, 404 where it shouldn’t), fix routing or environment issues and re‑deploy.
+
+---
+
+## 8. Final report
+
+When you are done, provide a concise **deployment summary** that includes:
+
+1. **Git status**
+   - Whether there are uncommitted local changes.
+   - Whether you pushed anything back to the GitHub repo (and which branch/commit).
+
+2. **Runtime configuration**
+   - Node version.
+   - Exact build command.
+   - Exact start command used by the deployment.
+
+3. **Environment variables checklist**
+   - Table of env variables discovered and which ones I still need to fill in Secrets (if any).
+
+4. **Deployment details**
+   - Replit Deployment URL.
+   - Confirmation that the homepage and key routes were opened and rendered successfully.
+   - Any known limitations or TODOs.
+
+5. **How to iterate**
+   - Brief instructions: if I push new commits to GitHub or edit in Replit, how to trigger a new deployment.
+
+---
+
+Execute all of these steps now.  
+The end state I want: **a reproducible, button‑clickable Replit deployment where my app is live, with a clear explanation of what you did and what I may still need to configure (secrets, external services).**
+```
