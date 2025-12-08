@@ -1,0 +1,1135 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   KONKRED DESIGN SYSTEM
+   Brutalist • Industrial • Futuristic • Textured
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Core blacks */
+  --bg-void: #000000;
+  --bg-primary: #020202;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #0f0f0f;
+  --bg-elevated: #141414;
+  --bg-surface: #1a1a1a;
+  
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-tertiary: #606060;
+  --text-muted: #404040;
+  
+  /* Accent spectrum */
+  --accent-red: #ff2a2a;
+  --accent-red-bright: #ff4444;
+  --accent-red-dim: #991a1a;
+  --accent-red-glow: rgba(255, 42, 42, 0.6);
+  
+  --accent-orange: #ff6b00;
+  --accent-orange-bright: #ff8533;
+  --accent-orange-glow: rgba(255, 107, 0, 0.5);
+  
+  --accent-gold: #d4a012;
+  --accent-gold-bright: #ffc107;
+  --accent-gold-glow: rgba(212, 160, 18, 0.5);
+  
+  --accent-cyan: #00f0ff;
+  --accent-cyan-dim: #00a0aa;
+  --accent-cyan-glow: rgba(0, 240, 255, 0.5);
+  
+  --accent-green: #00ff41;
+  --accent-green-dim: #00aa2a;
+  --accent-green-glow: rgba(0, 255, 65, 0.5);
+  
+  /* Borders */
+  --border-primary: #2a2a2a;
+  --border-secondary: #1f1f1f;
+  --border-accent: #333333;
+  
+  /* Special */
+  --terminal-green: #00ff41;
+  --warning-amber: #ffaa00;
+  --danger-red: #ff0033;
+  --system-blue: #0066ff;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE RESET & SETUP
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border-radius: 0 !important;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-void);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TEXTURE LAYERS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Noise texture overlay - covers everything */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 10000;
+  mix-blend-mode: overlay;
+}
+
+/* Grid pattern - subtle tech grid */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Radial gradient ambience */
+.ambient-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 40%, rgba(255, 42, 42, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(255, 107, 0, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 60% at 50% 90%, rgba(0, 240, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TEXTURE CLASSES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Fine grid */
+.texture-grid {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Coarse grid */
+.texture-grid-lg {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Dot matrix */
+.texture-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Diagonal lines */
+.texture-diagonal {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(255, 255, 255, 0.02) 10px,
+    rgba(255, 255, 255, 0.02) 11px
+  );
+}
+
+/* Cross hatch */
+.texture-crosshatch {
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 255, 255, 0.015) 10px,
+      rgba(255, 255, 255, 0.015) 11px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 255, 255, 0.015) 10px,
+      rgba(255, 255, 255, 0.015) 11px
+    );
+}
+
+/* Horizontal scan lines */
+.texture-scanlines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+}
+
+/* Vertical bars */
+.texture-vbars {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 4px,
+    rgba(255, 255, 255, 0.02) 4px,
+    rgba(255, 255, 255, 0.02) 5px
+  );
+}
+
+/* Metal brushed */
+.texture-brushed {
+  background-image: 
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.01) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+}
+
+/* Circuit pattern */
+.texture-circuit {
+  background-image: 
+    linear-gradient(90deg, rgba(255, 42, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(255, 42, 42, 0.03) 1px, transparent 1px),
+    radial-gradient(rgba(255, 42, 42, 0.05) 2px, transparent 2px);
+  background-size: 40px 40px, 40px 40px, 40px 40px;
+  background-position: 0 0, 0 0, 20px 20px;
+}
+
+/* Hex pattern */
+.texture-hex {
+  background-color: var(--bg-secondary);
+  background-image: 
+    linear-gradient(30deg, var(--bg-tertiary) 12%, transparent 12.5%, transparent 87%, var(--bg-tertiary) 87.5%, var(--bg-tertiary)),
+    linear-gradient(150deg, var(--bg-tertiary) 12%, transparent 12.5%, transparent 87%, var(--bg-tertiary) 87.5%, var(--bg-tertiary)),
+    linear-gradient(30deg, var(--bg-tertiary) 12%, transparent 12.5%, transparent 87%, var(--bg-tertiary) 87.5%, var(--bg-tertiary)),
+    linear-gradient(150deg, var(--bg-tertiary) 12%, transparent 12.5%, transparent 87%, var(--bg-tertiary) 87.5%, var(--bg-tertiary)),
+    linear-gradient(60deg, rgba(255,255,255,0.02) 25%, transparent 25.5%, transparent 75%, rgba(255,255,255,0.02) 75%, rgba(255,255,255,0.02)),
+    linear-gradient(60deg, rgba(255,255,255,0.02) 25%, transparent 25.5%, transparent 75%, rgba(255,255,255,0.02) 75%, rgba(255,255,255,0.02));
+  background-size: 40px 70px;
+  background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0, 20px 35px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PANEL SYSTEMS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Base panel */
+.panel {
+  position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  overflow: hidden;
+}
+
+/* Panel with inset */
+.panel-inset {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Panel elevated */
+.panel-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-accent);
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+/* Panel with depth layers */
+.panel-deep {
+  position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+}
+
+.panel-deep::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  z-index: -1;
+}
+
+.panel-deep::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-secondary);
+  z-index: -2;
+}
+
+/* Industrial frame panel */
+.panel-industrial {
+  position: relative;
+  background: 
+    linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 50%, var(--bg-tertiary) 100%);
+  border: 2px solid var(--border-primary);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.panel-industrial::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    var(--accent-red) 0%, 
+    var(--accent-orange) 25%,
+    var(--accent-gold) 50%,
+    var(--accent-orange) 75%,
+    var(--accent-red) 100%
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHADOW SYSTEMS - BRUTALIST OFFSET
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.shadow-brutal {
+  position: relative;
+}
+
+.shadow-brutal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-red);
+  transform: translate(4px, 4px);
+  z-index: -1;
+  transition: transform 0.2s ease;
+}
+
+.shadow-brutal:hover::before {
+  transform: translate(6px, 6px);
+}
+
+.shadow-brutal-cyan::before {
+  background: var(--accent-cyan);
+}
+
+.shadow-brutal-gold::before {
+  background: var(--accent-gold);
+}
+
+/* Multi-layer shadow */
+.shadow-stack {
+  position: relative;
+}
+
+.shadow-stack::before,
+.shadow-stack::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transition: transform 0.2s ease;
+}
+
+.shadow-stack::before {
+  background: var(--border-primary);
+  transform: translate(2px, 2px);
+}
+
+.shadow-stack::after {
+  background: var(--accent-red);
+  opacity: 0.3;
+  transform: translate(4px, 4px);
+}
+
+.shadow-stack:hover::before {
+  transform: translate(3px, 3px);
+}
+
+.shadow-stack:hover::after {
+  transform: translate(6px, 6px);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CORNER SYSTEMS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Cut corners */
+.corner-cut {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 12px) 0,
+    100% 12px,
+    100% 100%,
+    12px 100%,
+    0 calc(100% - 12px)
+  );
+}
+
+.corner-cut-sm {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% 100%,
+    8px 100%,
+    0 calc(100% - 8px)
+  );
+}
+
+.corner-cut-lg {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 20px) 0,
+    100% 20px,
+    100% 100%,
+    20px 100%,
+    0 calc(100% - 20px)
+  );
+}
+
+/* Corner brackets */
+.corner-brackets {
+  position: relative;
+}
+
+.corner-brackets::before,
+.corner-brackets::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--accent-red);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.corner-brackets::before {
+  top: -4px;
+  left: -4px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner-brackets::after {
+  bottom: -4px;
+  right: -4px;
+  border-left: none;
+  border-top: none;
+}
+
+.corner-brackets:hover::before,
+.corner-brackets:hover::after {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LASER & RAY EFFECTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Global laser scan */
+@keyframes laser-sweep {
+  0% {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.laser-global {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--accent-red) 20%,
+    #fff 50%,
+    var(--accent-red) 80%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 4px var(--accent-red),
+    0 0 8px var(--accent-red),
+    0 0 16px var(--accent-red),
+    0 0 32px var(--accent-red);
+  animation: laser-sweep 10s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Horizontal laser on elements */
+@keyframes laser-horizontal {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(200%);
+    opacity: 0;
+  }
+}
+
+.laser-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  overflow: hidden;
+}
+
+.laser-top::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--accent-red),
+    #fff,
+    var(--accent-red),
+    transparent
+  );
+  box-shadow: 0 0 10px var(--accent-red), 0 0 20px var(--accent-red);
+  animation: laser-horizontal 4s ease-in-out infinite;
+}
+
+/* Vertical laser */
+@keyframes laser-vertical {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+.laser-left {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  overflow: hidden;
+}
+
+.laser-left::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 40%;
+  width: 100%;
+  background: linear-gradient(180deg,
+    transparent,
+    var(--accent-cyan),
+    #fff,
+    var(--accent-cyan),
+    transparent
+  );
+  box-shadow: 0 0 10px var(--accent-cyan);
+  animation: laser-vertical 3s ease-in-out infinite;
+}
+
+/* Ray burst from center */
+@keyframes ray-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ray-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(255, 42, 42, 0.1) 2deg,
+    transparent 4deg,
+    transparent 30deg,
+    rgba(255, 107, 0, 0.08) 32deg,
+    transparent 34deg,
+    transparent 60deg,
+    rgba(212, 160, 18, 0.06) 62deg,
+    transparent 64deg,
+    transparent 90deg,
+    rgba(0, 240, 255, 0.05) 92deg,
+    transparent 94deg,
+    transparent 120deg,
+    rgba(255, 42, 42, 0.1) 122deg,
+    transparent 124deg,
+    transparent 150deg,
+    rgba(255, 107, 0, 0.08) 152deg,
+    transparent 154deg,
+    transparent 180deg,
+    rgba(212, 160, 18, 0.06) 182deg,
+    transparent 184deg,
+    transparent 210deg,
+    rgba(0, 240, 255, 0.05) 212deg,
+    transparent 214deg,
+    transparent 240deg,
+    rgba(255, 42, 42, 0.1) 242deg,
+    transparent 244deg,
+    transparent 270deg,
+    rgba(255, 107, 0, 0.08) 272deg,
+    transparent 274deg,
+    transparent 300deg,
+    rgba(212, 160, 18, 0.06) 302deg,
+    transparent 304deg,
+    transparent 330deg,
+    rgba(0, 240, 255, 0.05) 332deg,
+    transparent 334deg,
+    transparent 360deg
+  );
+  animation: ray-rotate 60s linear infinite;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GLITCH EFFECTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes glitch-1 {
+  0%, 100% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(-2px, 2px);
+  }
+  20% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(1px, -1px);
+  }
+  40% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(-1px, 2px);
+  }
+  60% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(2px, -2px);
+  }
+  80% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(-2px, 1px);
+  }
+}
+
+@keyframes glitch-2 {
+  0%, 100% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(2px, -2px);
+  }
+  20% {
+    clip-path: inset(12% 0 80% 0);
+    transform: translate(-1px, 1px);
+  }
+  40% {
+    clip-path: inset(60% 0 10% 0);
+    transform: translate(1px, -2px);
+  }
+  60% {
+    clip-path: inset(75% 0 15% 0);
+    transform: translate(-2px, 2px);
+  }
+  80% {
+    clip-path: inset(20% 0 50% 0);
+    transform: translate(2px, -1px);
+  }
+}
+
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.glitch:hover::before {
+  opacity: 1;
+  color: var(--accent-red);
+  animation: glitch-1 0.3s infinite linear alternate-reverse;
+}
+
+.glitch:hover::after {
+  opacity: 1;
+  color: var(--accent-cyan);
+  animation: glitch-2 0.3s infinite linear alternate-reverse;
+}
+
+/* Text glitch simpler */
+@keyframes glitch-text {
+  0%, 100% {
+    text-shadow:
+      2px 0 var(--accent-red),
+      -2px 0 var(--accent-cyan);
+  }
+  25% {
+    text-shadow:
+      -2px 0 var(--accent-red),
+      2px 0 var(--accent-cyan);
+  }
+  50% {
+    text-shadow:
+      2px -1px var(--accent-red),
+      -2px 1px var(--accent-cyan);
+  }
+  75% {
+    text-shadow:
+      -1px 2px var(--accent-red),
+      1px -2px var(--accent-cyan);
+  }
+}
+
+.glitch-text:hover {
+  animation: glitch-text 0.15s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LED & INDICATOR EFFECTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes led-pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow:
+      0 0 2px currentColor,
+      0 0 4px currentColor,
+      0 0 8px currentColor;
+  }
+  50% {
+    opacity: 0.4;
+    box-shadow: none;
+  }
+}
+
+.led {
+  width: 8px;
+  height: 8px;
+  animation: led-pulse 1.5s ease-in-out infinite;
+}
+
+.led-sm {
+  width: 4px;
+  height: 4px;
+}
+
+.led-lg {
+  width: 12px;
+  height: 12px;
+}
+
+.led-red {
+  background: var(--accent-red);
+  color: var(--accent-red);
+}
+
+.led-orange {
+  background: var(--accent-orange);
+  color: var(--accent-orange);
+}
+
+.led-gold {
+  background: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.led-green {
+  background: var(--accent-green);
+  color: var(--accent-green);
+}
+
+.led-cyan {
+  background: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.led-static {
+  animation: none;
+  box-shadow:
+    0 0 2px currentColor,
+    0 0 6px currentColor;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEON & GLOW EFFECTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes neon-flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+    opacity: 1;
+    text-shadow:
+      0 0 4px currentColor,
+      0 0 11px currentColor,
+      0 0 19px currentColor,
+      0 0 40px currentColor;
+  }
+  20%, 24%, 55% {
+    opacity: 0.8;
+    text-shadow: none;
+  }
+}
+
+.neon-text {
+  animation: neon-flicker 1.5s infinite alternate;
+}
+
+@keyframes neon-border-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 5px var(--accent-red),
+      0 0 10px var(--accent-red),
+      inset 0 0 5px rgba(255, 42, 42, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 10px var(--accent-red),
+      0 0 20px var(--accent-red),
+      0 0 40px var(--accent-red),
+      inset 0 0 10px rgba(255, 42, 42, 0.2);
+  }
+}
+
+.neon-border {
+  animation: neon-border-pulse 2s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCAN & DATA STREAM EFFECTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes scan-vertical {
+  0% {
+    top: -10%;
+  }
+  100% {
+    top: 110%;
+  }
+}
+
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(180deg,
+    transparent,
+    rgba(255, 42, 42, 0.4),
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 42, 42, 0.4),
+    transparent
+  );
+  box-shadow: 0 0 20px var(--accent-red);
+  animation: scan-vertical 4s linear infinite;
+  pointer-events: none;
+}
+
+/* Data stream */
+@keyframes data-flow {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+.data-stream {
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(0, 240, 255, 0.1) 25%,
+    rgba(0, 240, 255, 0.3) 50%,
+    rgba(0, 240, 255, 0.1) 75%,
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: data-flow 3s linear infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUTTON SYSTEMS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.btn-brutal {
+  position: relative;
+  display: inline-block;
+  padding: 12px 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent-red);
+  background: transparent;
+  border: 2px solid var(--accent-red);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.btn-brutal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--accent-red);
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+
+.btn-brutal:hover {
+  color: var(--bg-primary);
+}
+
+.btn-brutal:hover::before {
+  transform: translateX(100%);
+}
+
+.btn-brutal:active {
+  transform: translate(2px, 2px);
+}
+
+/* Filled variant */
+.btn-brutal-filled {
+  background: var(--accent-red);
+  color: var(--bg-primary);
+}
+
+.btn-brutal-filled::before {
+  background: var(--bg-primary);
+}
+
+.btn-brutal-filled:hover {
+  color: var(--accent-red);
+}
+
+/* Cyan variant */
+.btn-brutal-cyan {
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+}
+
+.btn-brutal-cyan::before {
+  background: var(--accent-cyan);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.font-display {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.font-heading {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.text-glow-red {
+  text-shadow:
+    0 0 10px var(--accent-red-glow),
+    0 0 20px var(--accent-red-glow),
+    0 0 40px var(--accent-red-glow);
+}
+
+.text-glow-cyan {
+  text-shadow:
+    0 0 10px var(--accent-cyan-glow),
+    0 0 20px var(--accent-cyan-glow);
+}
+
+.text-glow-gold {
+  text-shadow:
+    0 0 10px var(--accent-gold-glow),
+    0 0 20px var(--accent-gold-glow);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-primary);
+  border: 1px solid var(--border-secondary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-red);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SELECTION
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+::selection {
+  background: var(--accent-red);
+  color: var(--bg-primary);
+}
+
+::-moz-selection {
+  background: var(--accent-red);
+  color: var(--bg-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes power-on {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.01);
+    filter: brightness(3);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleY(0.01);
+    filter: brightness(2);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleY(1);
+    filter: brightness(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out forwards;
+}
+
+.animate-power-on {
+  animation: power-on 0.6s ease-out forwards;
+}
+
+/* Stagger children */
+.stagger-children > * {
+  opacity: 0;
+  animation: slide-up 0.4s ease-out forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
+.stagger-children > *:nth-child(9) { animation-delay: 0.45s; }
+.stagger-children > *:nth-child(10) { animation-delay: 0.5s; }
+.stagger-children > *:nth-child(11) { animation-delay: 0.55s; }
+.stagger-children > *:nth-child(12) { animation-delay: 0.6s; }
