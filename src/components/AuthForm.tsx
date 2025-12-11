@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useSupabase } from '@/components/providers/SupabaseProvider';
-import { motion } from 'framer-motion';
-import { TerminalButton, LEDIndicator, ScanLine } from './motion/MotionComponents';
 
 interface AuthFormProps {
   mode: 'enter' | 'join';
@@ -16,22 +15,15 @@ export default function AuthForm({ mode }: AuthFormProps) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isScanning, setIsScanning] = useState(true);
   
   const { supabase, isConfigured } = useSupabase();
   const router = useRouter();
-
-  // Stop scanning after initial animation
-  useState(() => {
-    const timer = setTimeout(() => setIsScanning(false), 3000);
-    return () => clearTimeout(timer);
-  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!isConfigured || !supabase) {
-      setError('Authentication system not configured. Please contact administrator.');
+      setError('System not configured. Contact administrator.');
       return;
     }
     
@@ -39,7 +31,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
     setError(null);
 
     if (mode === 'join' && password !== confirmPassword) {
-      setError('Authentication mismatch detected');
+      setError('Access keys do not match.');
       setLoading(false);
       return;
     }
@@ -60,201 +52,165 @@ export default function AuthForm({ mode }: AuthFormProps) {
       }
       
       router.push('/vault');
-    } catch (error: any) {
-      setError(`System error: ${error.message}`);
+    } catch (err: any) {
+      setError(err.message || 'Authentication failed.');
     } finally {
       setLoading(false);
     }
   };
 
-  const title = mode === 'enter' ? 'Enter the vault.' : 'Join to acquire Executive Protocols.';
+  const title = mode === 'enter' ? 'Enter the vault.' : 'Join to acquire protocols.';
   const buttonText = mode === 'enter' ? 'Enter' : 'Join';
-  const toggleText = mode === 'enter' 
-    ? "Access credentials required. " 
-    : "System access granted. ";
-  const toggleLink = mode === 'enter' ? '/join' : '/enter';
-  const toggleLinkText = mode === 'enter' ? 'Register' : 'Authenticate';
 
   return (
-    <div className="min-h-screen bg-primary flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Background security effects */}
-      <div className="absolute inset-0">
-        <motion.div
-          className="absolute top-0 left-0 w-64 h-64 bg-accent-red rounded-full filter blur-3xl opacity-10"
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 w-64 h-64 bg-accent-gold rounded-full filter blur-3xl opacity-10"
-          animate={{ scale: [1.2, 1, 1.2], rotate: [360, 180, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </div>
-
-      <motion.div 
-        className="max-w-md w-full relative z-10"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        {/* Security gate frame */}
-        <div className="panel-frame auth-gate p-8 relative">
-          {/* Scanning line effect */}
-          {isScanning && <ScanLine className="opacity-50" />}
-          
-          {/* Status indicators */}
-          <motion.div
-            className="absolute top-4 right-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            <LEDIndicator 
-              color={mode === 'enter' ? 'amber' : 'green'} 
-              label={mode === 'enter' ? 'SECURE' : 'REGISTER'}
-            />
-          </motion.div>
-
-          {/* Header */}
-          <motion.div
-            className="mb-6"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <h1 className="font-heading text-2xl font-bold text-text-primary mb-2 tracking-wide">
-              {title}
-            </h1>
-            <div className="h-0.5 bg-gradient-to-r from-transparent via-accent-red to-transparent" />
-          </motion.div>
-          
-          {/* Error display */}
-          {error && (
-            <motion.div
-              className="bg-red-900/20 border border-red-800 text-red-400 px-4 py-3 mb-6 font-mono text-sm"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex items-center space-x-2">
-                <LEDIndicator color="red" />
-                <span>{error}</span>
+    <div className="min-h-screen bg-[#020202] flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0 texture-grid opacity-30" />
+      <div className="ambient-glow" />
+      
+      {/* Ray burst background */}
+      <div className="ray-burst" />
+      
+      <div className="relative z-10 w-full max-w-md">
+        {/* Main panel */}
+        <div className="relative shadow-stack">
+          <div className="relative bg-[#0a0a0a] border-2 border-[#2a2a2a] overflow-hidden">
+            
+            {/* Top accent bar */}
+            <div className="h-[3px] bg-gradient-to-r from-[#ff2a2a] via-[#ff6b00] to-[#d4a012]" />
+            
+            {/* Laser line */}
+            <div className="laser-top" />
+            
+            {/* Header bar */}
+            <div className="h-12 bg-[#0f0f0f] border-b border-[#2a2a2a] flex items-center justify-between px-6 texture-scanlines">
+              <div className="flex items-center space-x-3">
+                <div className={`led led-sm ${mode === 'enter' ? 'led-orange' : 'led-green'}`} />
+                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#606060]">
+                  {mode === 'enter' ? 'AUTHENTICATION' : 'REGISTRATION'}
+                </span>
               </div>
-            </motion.div>
-          )}
-          
-          {/* Form */}
-          <motion.form
-            onSubmit={handleSubmit}
-            className="space-y-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              <label htmlFor="email" className="block text-text-secondary text-sm mb-2 font-mono uppercase tracking-wide">
-                Identity Protocol
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full bg-primary/50 border border-border text-text-primary px-4 py-3 rounded focus:outline-none focus:border-accent-red focus:shadow-glow-red transition-all duration-300 font-mono"
-                placeholder="user@system.exec"
-              />
-            </motion.div>
+              <span className="text-[10px] font-mono text-[#ff2a2a]">SECURE</span>
+            </div>
             
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
-            >
-              <label htmlFor="password" className="block text-text-secondary text-sm mb-2 font-mono uppercase tracking-wide">
-                Access Key
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full bg-primary/50 border border-border text-text-primary px-4 py-3 rounded focus:outline-none focus:border-accent-red focus:shadow-glow-red transition-all duration-300 font-mono"
-                placeholder="••••••••"
-              />
-            </motion.div>
-            
-            {mode === 'join' && (
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 }}
+            {/* Content */}
+            <div className="p-8">
+              {/* Title */}
+              <h1 
+                className="font-mono text-2xl font-bold text-white mb-2 tracking-tight glitch-text"
+                data-text={title}
               >
-                <label htmlFor="confirmPassword" className="block text-text-secondary text-sm mb-2 font-mono uppercase tracking-wide">
-                  Confirm Access Key
-                </label>
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  className="w-full bg-primary/50 border border-border text-text-primary px-4 py-3 rounded focus:outline-none focus:border-accent-red focus:shadow-glow-red transition-all duration-300 font-mono"
-                  placeholder="••••••••"
-                />
-              </motion.div>
-            )}
+                {title}
+              </h1>
+              
+              <div className="h-[1px] w-24 bg-[#ff2a2a] mb-8" />
+              
+              {/* Error message */}
+              {error && (
+                <div className="mb-6 p-4 border-2 border-[#ff2a2a]/50 bg-[#ff2a2a]/10 text-[#ff2a2a] text-sm font-mono">
+                  <div className="flex items-center space-x-2">
+                    <div className="led led-sm led-red led-static" />
+                    <span>{error}</span>
+                  </div>
+                </div>
+              )}
+              
+              {/* Form */}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-[10px] font-mono uppercase tracking-[0.2em] text-[#606060] mb-2">
+                    Identity Protocol
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="user@system.exec"
+                    className="w-full bg-[#0f0f0f] border-2 border-[#2a2a2a] text-white px-4 py-3 font-mono text-sm placeholder-[#404040] focus:outline-none focus:border-[#ff2a2a] transition-colors"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-[10px] font-mono uppercase tracking-[0.2em] text-[#606060] mb-2">
+                    Access Key
+                  </label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                    className="w-full bg-[#0f0f0f] border-2 border-[#2a2a2a] text-white px-4 py-3 font-mono text-sm placeholder-[#404040] focus:outline-none focus:border-[#ff2a2a] transition-colors"
+                  />
+                </div>
+                
+                {mode === 'join' && (
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase tracking-[0.2em] text-[#606060] mb-2">
+                      Confirm Access Key
+                    </label>
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                      placeholder="••••••••"
+                      className="w-full bg-[#0f0f0f] border-2 border-[#2a2a2a] text-white px-4 py-3 font-mono text-sm placeholder-[#404040] focus:outline-none focus:border-[#ff2a2a] transition-colors"
+                    />
+                  </div>
+                )}
+                
+                {/* Submit button */}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full relative px-6 py-4 border-2 border-[#ff2a2a] bg-[#ff2a2a] text-black font-mono text-sm uppercase tracking-[0.15em] font-bold hover:bg-transparent hover:text-[#ff2a2a] transition-all disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group"
+                >
+                  {/* Loading sweep */}
+                  {loading && (
+                    <div 
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                      style={{ animation: 'laser-horizontal 1s ease-in-out infinite' }}
+                    />
+                  )}
+                  <span className="relative z-10">
+                    {loading ? 'AUTHENTICATING...' : buttonText}
+                  </span>
+                </button>
+              </form>
+              
+              {/* Toggle link */}
+              <div className="mt-8 text-center">
+                <span className="text-[#606060] text-sm font-mono">
+                  {mode === 'enter' ? 'No credentials? ' : 'Already registered? '}
+                </span>
+                <Link 
+                  href={mode === 'enter' ? '/join' : '/enter'}
+                  className="text-[#ff2a2a] hover:text-[#ff6b00] transition-colors text-sm font-mono"
+                >
+                  {mode === 'enter' ? 'Register' : 'Authenticate'}
+                </Link>
+              </div>
+            </div>
             
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-            >
-              <TerminalButton
-                type="submit"
-                disabled={loading}
-                loading={loading}
-                className="w-full text-lg"
-              >
-                {loading ? 'AUTHENTICATING...' : buttonText}
-              </TerminalButton>
-            </motion.div>
-          </motion.form>
-          
-          {/* Toggle link */}
-          <motion.div
-            className="mt-6 text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-          >
-            <span className="text-text-secondary text-sm font-mono">
-              {toggleText}
-            </span>
-            <a 
-              href={toggleLink} 
-              className="text-accent-red hover:text-accent-gold transition-colors text-sm font-mono ml-1"
-            >
-              {toggleLinkText}
-            </a>
-          </motion.div>
-
-          {/* Security badge */}
-          <motion.div
-            className="absolute bottom-4 left-4 text-xs text-text-secondary font-mono opacity-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
-            transition={{ delay: 1 }}
-          >
-            SECURE CONNECTION v2.0
-          </motion.div>
+            {/* Bottom status bar */}
+            <div className="h-10 bg-[#0f0f0f] border-t border-[#2a2a2a] flex items-center justify-between px-6">
+              <span className="text-[9px] font-mono text-[#404040] uppercase tracking-wider">
+                SECURE CONNECTION v2.0
+              </span>
+              <div className="flex items-center space-x-2">
+                <div className="led led-sm led-green led-static" />
+                <span className="text-[9px] font-mono text-[#00ff41]">ENCRYPTED</span>
+              </div>
+            </div>
+            
+            {/* Corner cuts */}
+            <div className="absolute top-0 right-0 w-6 h-6 bg-[#020202]" style={{ clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }} />
+            <div className="absolute bottom-0 left-0 w-6 h-6 bg-[#020202]" style={{ clipPath: 'polygon(0 100%, 0 0, 100% 100%)' }} />
+          </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

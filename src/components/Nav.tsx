@@ -1,17 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useSupabase, useUser } from '@/components/providers/SupabaseProvider';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { LEDIndicator } from './motion/MotionComponents';
-import { useState } from 'react';
 
 export default function Nav() {
   const { user } = useUser();
   const { supabase } = useSupabase();
   const router = useRouter();
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const pathname = usePathname();
 
   const handleSignOut = async () => {
     if (supabase) {
@@ -20,139 +18,154 @@ export default function Nav() {
     router.push('/');
   };
 
-  const navItems = [
-    { href: '/protocols', label: 'Protocols', status: 'active' as const },
-    { href: '/tools', label: 'Tools', status: 'active' as const },
-  ];
-
-  if (user) {
-    navItems.push({ href: '/vault', label: 'Vault', status: 'active' as const });
-  }
+  const isActive = (path: string) => pathname === path;
 
   return (
-    <motion.nav 
-      className="panel-frame mb-8"
-      initial={{ y: -50, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6 }}
-    >
+    <nav className="relative border-b-2 border-[#2a2a2a] bg-[#0a0a0a] texture-scanlines">
+      {/* Top accent bar */}
+      <div className="h-[3px] bg-gradient-to-r from-[#ff2a2a] via-[#ff6b00] to-[#d4a012]" />
+      
+      {/* Laser scan on nav */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] overflow-hidden pointer-events-none">
+        <div 
+          className="h-full w-[30%]"
+          style={{
+            background: 'linear-gradient(90deg, transparent, #ff2a2a, #fff, #ff2a2a, transparent)',
+            boxShadow: '0 0 10px #ff2a2a',
+            animation: 'laser-horizontal 6s ease-in-out infinite'
+          }}
+        />
+      </div>
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <motion.div 
-            className="flex items-center space-x-8"
-            initial={{ x: -50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <Link href="/" className="font-heading text-xl font-bold text-text-primary relative group">
-              <span className="relative z-10">Executive Protocols</span>
-              <motion.div
-                className="absolute inset-0 bg-accent-red opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded"
-              />
-              <motion.div
-                className="absolute -bottom-1 left-0 right-0 h-0.5 bg-accent-red"
-                initial={{ scaleX: 0 }}
-                whileHover={{ scaleX: 1 }}
-                transition={{ duration: 0.3 }}
-                style={{ transformOrigin: 'center' }}
-              />
+          
+          {/* Logo */}
+          <div className="flex items-center space-x-8">
+            <Link href="/" className="group flex items-center space-x-3">
+              {/* Logo mark */}
+              <div className="relative w-8 h-8 border-2 border-[#ff2a2a] bg-[#0f0f0f] flex items-center justify-center group-hover:border-[#ff6b00] transition-colors">
+                <div className="w-3 h-3 bg-[#ff2a2a] group-hover:bg-[#ff6b00] transition-colors" />
+                {/* Corner cuts */}
+                <div className="absolute -top-[2px] -right-[2px] w-2 h-2 bg-[#0a0a0a]" style={{ clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }} />
+                <div className="absolute -bottom-[2px] -left-[2px] w-2 h-2 bg-[#0a0a0a]" style={{ clipPath: 'polygon(0 100%, 0 0, 100% 100%)' }} />
+              </div>
+              
+              {/* Logo text */}
+              <span 
+                className="font-mono text-xl font-bold text-white tracking-tight group-hover:text-[#ff2a2a] transition-colors glitch-text"
+                data-text="KONKRED"
+              >
+                KONKRED
+              </span>
             </Link>
             
-            <div className="hidden md:flex items-center space-x-6">
-              {navItems.map((item, index) => (
-                <motion.div
-                  key={item.href}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.2 + index * 0.1 }}
+            {/* Nav links */}
+            <div className="hidden md:flex items-center space-x-1">
+              <Link
+                href="/protocols"
+                className={`
+                  relative px-4 py-2 font-mono text-xs uppercase tracking-[0.15em] transition-all
+                  ${isActive('/protocols') 
+                    ? 'text-[#ff2a2a] bg-[#ff2a2a]/10' 
+                    : 'text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a]'
+                  }
+                `}
+              >
+                {isActive('/protocols') && (
+                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#ff2a2a]" />
+                )}
+                Protocols
+              </Link>
+              
+              <Link
+                href="/tools"
+                className={`
+                  relative px-4 py-2 font-mono text-xs uppercase tracking-[0.15em] transition-all
+                  ${isActive('/tools') 
+                    ? 'text-[#00f0ff] bg-[#00f0ff]/10' 
+                    : 'text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a]'
+                  }
+                `}
+              >
+                {isActive('/tools') && (
+                  <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#00f0ff]" />
+                )}
+                Tools
+              </Link>
+              
+              {user && (
+                <Link
+                  href="/vault"
+                  className={`
+                    relative px-4 py-2 font-mono text-xs uppercase tracking-[0.15em] transition-all
+                    ${isActive('/vault') 
+                      ? 'text-[#d4a012] bg-[#d4a012]/10' 
+                      : 'text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a]'
+                    }
+                  `}
                 >
-                  <Link
-                    href={item.href}
-                    className="text-text-secondary hover:text-text-primary transition-colors relative group"
-                    onMouseEnter={() => setHoveredItem(item.href)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                  >
-                    <span className="relative z-10 font-heading text-sm uppercase tracking-wide">
-                      {item.label}
-                    </span>
-                    
-                    <motion.div
-                      className="absolute bottom-0 left-0 h-0.5 bg-accent-red"
-                      initial={{ width: 0 }}
-                      animate={{ width: hoveredItem === item.href ? '100%' : '0%' }}
-                      transition={{ duration: 0.2 }}
-                    />
-                    
-                    {hoveredItem === item.href && (
-                      <motion.div
-                        className="absolute -top-2 -left-2 -right-2 -bottom-2 border border-accent-red opacity-20 rounded"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.2 }}
-                      />
-                    )}
-                  </Link>
-                </motion.div>
-              ))}
+                  {isActive('/vault') && (
+                    <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#d4a012]" />
+                  )}
+                  Vault
+                </Link>
+              )}
             </div>
-          </motion.div>
+          </div>
           
-          <motion.div 
-            className="flex items-center space-x-4"
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
+          {/* Right side */}
+          <div className="flex items-center space-x-4">
             {user ? (
               <div className="flex items-center space-x-4">
-                <LEDIndicator 
-                  color="green" 
-                  label="AUTHENTICATED"
-                  className="hidden md:flex"
-                />
-                <motion.button
+                {/* Status indicator */}
+                <div className="hidden md:flex items-center space-x-2 px-3 py-1 border border-[#2a2a2a] bg-[#0f0f0f]">
+                  <div className="led led-sm led-green" />
+                  <span className="text-[9px] font-mono uppercase tracking-[0.15em] text-[#606060]">
+                    AUTHENTICATED
+                  </span>
+                </div>
+                
+                <button
                   onClick={handleSignOut}
-                  className="terminal-button text-sm"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="px-4 py-2 border-2 border-[#2a2a2a] font-mono text-xs uppercase tracking-[0.15em] text-[#a0a0a0] hover:border-[#ff2a2a] hover:text-[#ff2a2a] transition-all"
                 >
                   Exit
-                </motion.button>
+                </button>
               </div>
             ) : (
               <>
                 <Link 
                   href="/enter"
-                  className="text-text-secondary hover:text-text-primary transition-colors font-heading text-sm uppercase tracking-wide relative group"
+                  className="px-4 py-2 font-mono text-xs uppercase tracking-[0.15em] text-[#a0a0a0] hover:text-white transition-all"
                 >
-                  <span className="relative z-10">Enter</span>
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent-red"
-                    initial={{ width: 0 }}
-                    whileHover={{ width: '100%' }}
-                    transition={{ duration: 0.3 }}
-                  />
+                  Enter
                 </Link>
                 <Link 
                   href="/join"
-                  className="terminal-button text-sm"
+                  className="relative px-4 py-2 border-2 border-[#ff2a2a] font-mono text-xs uppercase tracking-[0.15em] text-[#ff2a2a] hover:bg-[#ff2a2a] hover:text-black transition-all overflow-hidden group"
                 >
-                  Join
+                  {/* Sweep effect */}
+                  <div className="absolute inset-0 bg-[#ff2a2a]/20 -translate-x-full group-hover:translate-x-full transition-transform duration-500" />
+                  <span className="relative z-10">Join</span>
                 </Link>
               </>
             )}
-          </motion.div>
+          </div>
         </div>
       </div>
       
-      {/* Animated scan line */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-accent-red to-transparent opacity-50"
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: [0, 1, 0] }}
-        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ transformOrigin: 'center' }}
-      />
-    </motion.nav>
+      {/* Bottom scan line */}
+      <div className="absolute bottom-0 left-0 right-0 h-[1px] overflow-hidden pointer-events-none">
+        <div 
+          className="h-full w-[20%]"
+          style={{
+            background: 'linear-gradient(90deg, transparent, #d4a012, transparent)',
+            boxShadow: '0 0 8px #d4a012',
+            animation: 'laser-horizontal 8s ease-in-out infinite reverse'
+          }}
+        />
+      </div>
+    </nav>
   );
 }

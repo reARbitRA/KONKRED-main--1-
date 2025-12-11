@@ -1,46 +1,22 @@
-'use client';
-
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import ProtocolCard from '@/components/ProtocolCard';
 import ToolCard from '@/components/ToolCard';
 import { Protocol, Tool } from '@/lib/types';
-import { GlowingText, TerminalButton, LEDIndicator } from '@/components/motion/MotionComponents';
 
-// Featured protocols data
+// Sample featured protocols
 const featuredProtocols: Protocol[] = [
   {
     id: '1',
     slug: 'financial-analysis-protocol',
     title: 'Financial Analysis Protocol',
     tagline: 'Automated financial statement analysis with executive summaries',
-    description: 'Comprehensive financial analysis protocol that processes balance sheets, income statements, and cash flow statements to generate detailed executive summaries and risk assessments.',
+    description: 'Comprehensive financial analysis protocol.',
     price_cents: 25000,
     industry: 'Finance',
     complexity: 'advanced',
-    sample_output: JSON.stringify({
-      analysis_id: "FA-2024-001",
-      company: "Acme Corp",
-      period: "Q4 2023",
-      revenue_growth: "+23.5%",
-      profit_margin: "18.7%",
-      risk_score: "Low",
-      recommendations: [
-        "Expand into Asian markets",
-        "Optimize supply chain costs",
-        "Consider strategic acquisitions"
-      ]
-    }, null, 2),
-    whats_included: [
-      'Core Executive Protocol',
-      'Input schema definitions',
-      'Output schema specifications',
-      'Financial data validation rules',
-      'Risk assessment framework',
-      'Executive summary templates',
-      'Compliance documentation'
-    ],
-    file_url: 'https://example.com/protocols/financial-analysis-protocol.zip',
+    sample_output: '{}',
+    whats_included: ['Core Protocol', 'Input Schema', 'Output Schema'],
+    file_url: '',
     created_at: '2024-01-15T00:00:00Z',
     is_featured: true
   },
@@ -49,31 +25,13 @@ const featuredProtocols: Protocol[] = [
     slug: 'saas-metrics-protocol',
     title: 'SaaS Metrics Protocol',
     tagline: 'Real-time SaaS performance monitoring and forecasting',
-    description: 'Advanced SaaS metrics analysis protocol that calculates churn, LTV, CAC, and generates growth forecasts based on historical performance data.',
+    description: 'Advanced SaaS metrics analysis protocol.',
     price_cents: 49000,
     industry: 'SaaS',
     complexity: 'enterprise',
-    sample_output: JSON.stringify({
-      metrics_period: "January 2024",
-      monthly_recurring_revenue: "$2.4M",
-      annual_recurring_revenue: "$28.8M",
-      customer_acquisition_cost: "$450",
-      lifetime_value: "$12,500",
-      ltv_cac_ratio: "27.8",
-      churn_rate: "2.1%",
-      net_revenue_retention: "118%",
-      forecast_mrr_next_quarter: "$2.7M"
-    }, null, 2),
-    whats_included: [
-      'Core Executive Protocol',
-      'SaaS metrics calculation engine',
-      'Forecasting algorithms',
-      'Benchmark data sets',
-      'Performance dashboards',
-      'Alert configurations',
-      'Integration documentation'
-    ],
-    file_url: 'https://example.com/protocols/saas-metrics-protocol.zip',
+    sample_output: '{}',
+    whats_included: ['Core Protocol', 'Metrics Engine', 'Forecasting'],
+    file_url: '',
     created_at: '2024-01-10T00:00:00Z',
     is_featured: true
   },
@@ -82,30 +40,13 @@ const featuredProtocols: Protocol[] = [
     slug: 'compliance-audit-protocol',
     title: 'Compliance Audit Protocol',
     tagline: 'Automated regulatory compliance assessment and reporting',
-    description: 'Enterprise-grade compliance audit protocol that evaluates systems against GDPR, SOC 2, and ISO 27001 standards.',
+    description: 'Enterprise-grade compliance audit protocol.',
     price_cents: 99000,
     industry: 'Compliance',
     complexity: 'enterprise',
-    sample_output: JSON.stringify({
-      audit_id: "CA-2024-001",
-      framework: "SOC 2 Type II",
-      audit_date: "2024-01-20",
-      compliance_score: "87%",
-      critical_findings: 0,
-      recommendations: [
-        "Implement multi-factor authentication",
-        "Enhance logging capabilities",
-        "Update incident response procedures"
-      ]
-    }, null, 2),
-    whats_included: [
-      'Core Executive Protocol',
-      'Multi-framework assessment engine',
-      'Control evaluation criteria',
-      'Remediation workflow templates',
-      'Audit report generators'
-    ],
-    file_url: 'https://example.com/protocols/compliance-audit-protocol.zip',
+    sample_output: '{}',
+    whats_included: ['Core Protocol', 'Multi-framework Assessment'],
+    file_url: '',
     created_at: '2024-01-05T00:00:00Z',
     is_featured: true
   }
@@ -114,211 +55,218 @@ const featuredProtocols: Protocol[] = [
 const tools: Tool[] = [
   {
     name: 'Valuation Terminal',
-    description: 'Values Executive Protocols using industry-standard methodologies and market comparables.',
+    description: 'Calculate economic value of any protocol using industry-standard methodologies.',
     accessLevel: 'Free',
-    href: 'https://example.com/valuation-terminal'
+    href: 'https://example.com/valuation'
   },
   {
     name: 'Protocol Documenter',
-    description: 'Creates structured documentation for any protocol with automated formatting.',
+    description: 'Generate structured documentation for any protocol automatically.',
     accessLevel: 'Pro',
-    href: 'https://example.com/protocol-documenter'
+    href: 'https://example.com/documenter'
   },
   {
     name: 'Artifact Foundry',
-    description: 'Generates multiple outputs from one protocol execution with variations.',
+    description: 'Generate multiple outputs from a single protocol execution.',
     accessLevel: 'Pro',
-    href: 'https://example.com/artifact-foundry'
+    href: 'https://example.com/foundry'
   },
   {
     name: 'Evolve Studio',
-    description: 'Makes outputs interactive and iterative with real-time feedback loops.',
-    accessLevel: 'Included with protocol acquisition',
-    href: 'https://example.com/evolve-studio'
+    description: 'Transform static outputs into interactive experiences.',
+    accessLevel: 'Pro',
+    href: 'https://example.com/evolve'
   }
 ];
 
 export default function Home() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Hero Section */}
-      <motion.section 
-        className="text-center mb-20"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="max-w-5xl mx-auto">
-          <motion.h1 
-            className="font-heading text-5xl md:text-7xl font-bold text-text-primary mb-6 leading-tight"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, delay: 0.2 }}
-          >
-            <GlowingText>
-              Executive Protocols.
-            </GlowingText>
-            <br />
-            <span className="text-text-secondary">
-              Production-ready AI systems.
-            </span>
-          </motion.h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      
+      {/* ═══════════════════════════════════════════
+          HERO SECTION
+          ═══════════════════════════════════════════ */}
+      <section className="mb-24">
+        <div className="relative">
+          {/* Background texture */}
+          <div className="absolute inset-0 texture-circuit opacity-20" />
           
-          <motion.p 
-            className="font-body text-xl text-text-secondary mb-10 max-w-3xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            Marketplace for AI execution systems with structured outputs, 
-            compliance frameworks, and enterprise-grade reliability.
-          </motion.p>
-          
-          <motion.div 
-            className="flex justify-center space-x-6"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <Link href="/protocols">
-              <TerminalButton className="text-lg px-8 py-3">
-                Browse protocols
-              </TerminalButton>
-            </Link>
-            <Link href="/enter">
-              <motion.button
-                className="border border-accent-gold text-accent-gold px-8 py-3 rounded-button font-heading text-sm uppercase tracking-wide transition-all duration-300 hover:bg-accent-gold hover:text-primary hover:shadow-glow-gold"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Enter
-              </motion.button>
-            </Link>
-          </motion.div>
-        </div>
-
-        {/* Status indicators */}
-        <motion.div
-          className="flex justify-center space-x-8 mt-12"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8 }}
-        >
-          <LEDIndicator color="green" label="ONLINE" />
-          <LEDIndicator color="amber" label="ACTIVE" />
-          <LEDIndicator color="red" label="SECURED" />
-        </motion.div>
-      </motion.section>
-
-      {/* Featured Protocols Section */}
-      <motion.section 
-        className="mb-20"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-      >
-        <motion.div 
-          className="max-w-7xl mx-auto"
-          initial={{ y: 30 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.6, delay: 1 }}
-        >
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="font-heading text-3xl font-bold text-text-primary mb-2 tracking-wide">
-                Featured Executive Protocols
-              </h2>
-              <div className="h-0.5 w-32 bg-gradient-to-r from-accent-red to-transparent" />
+          {/* Main hero panel */}
+          <div className="relative shadow-stack">
+            <div className="relative bg-[#0a0a0a] border-2 border-[#2a2a2a] overflow-hidden">
+              
+              {/* Top accent bar */}
+              <div className="h-1 bg-gradient-to-r from-[#ff2a2a] via-[#ff6b00] to-[#d4a012]" />
+              
+              {/* Laser effect */}
+              <div className="laser-top" />
+              
+              {/* Ray burst */}
+              <div className="ray-burst opacity-20" />
+              
+              {/* Content */}
+              <div className="relative z-10 p-12 md:p-16">
+                {/* System status */}
+                <div className="flex items-center space-x-4 mb-8">
+                  <div className="flex items-center space-x-2 px-3 py-1 border border-[#2a2a2a] bg-[#0f0f0f]">
+                    <div className="led led-sm led-green" />
+                    <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#606060]">
+                      SYSTEM ONLINE
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2 px-3 py-1 border border-[#2a2a2a] bg-[#0f0f0f]">
+                    <div className="led led-sm led-orange" />
+                    <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#606060]">
+                      800+ PROTOCOLS
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Main title */}
+                <h1 className="mb-6">
+                  <span 
+                    className="block font-mono text-5xl md:text-7xl font-bold text-white tracking-tighter leading-none glitch-text"
+                    data-text="EXECUTIVE"
+                  >
+                    EXECUTIVE
+                  </span>
+                  <span className="block font-mono text-5xl md:text-7xl font-bold text-[#ff2a2a] tracking-tighter leading-none text-glow-red mt-2">
+                    PROTOCOLS
+                  </span>
+                </h1>
+                
+                {/* Accent line */}
+                <div className="h-[2px] w-32 bg-gradient-to-r from-[#ff2a2a] to-transparent mb-8" />
+                
+                {/* Description */}
+                <p className="text-[#a0a0a0] font-mono text-lg md:text-xl max-w-2xl leading-relaxed mb-12">
+                  Production-ready AI execution systems. Structured inputs. 
+                  Validated outputs. Enterprise-grade reliability.
+                </p>
+                
+                {/* CTA Buttons */}
+                <div className="flex flex-wrap gap-4">
+                  <Link href="/protocols" className="group relative">
+                    <div className="absolute inset-0 bg-[#ff2a2a] translate-x-1 translate-y-1 transition-transform group-hover:translate-x-2 group-hover:translate-y-2" />
+                    <div className="relative px-8 py-4 bg-[#ff2a2a] text-black font-mono text-sm uppercase tracking-[0.15em] font-bold border-2 border-[#ff2a2a] hover:bg-black hover:text-[#ff2a2a] transition-colors">
+                      Browse Protocols
+                    </div>
+                  </Link>
+                  
+                  <Link 
+                    href="/tools"
+                    className="px-8 py-4 border-2 border-[#2a2a2a] font-mono text-sm uppercase tracking-[0.15em] text-[#a0a0a0] hover:border-[#00f0ff] hover:text-[#00f0ff] transition-all"
+                  >
+                    View Tools
+                  </Link>
+                </div>
+              </div>
+              
+              {/* Corner cut */}
+              <div className="absolute top-0 right-0 w-12 h-12 bg-[#020202]" style={{ clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }} />
+              <div className="absolute bottom-0 left-0 w-12 h-12 bg-[#020202]" style={{ clipPath: 'polygon(0 100%, 0 0, 100% 100%)' }} />
             </div>
-            <LEDIndicator color="amber" label="3 SYSTEMS" />
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {featuredProtocols.map((protocol, index) => (
-              <ProtocolCard 
-                key={protocol.id} 
-                protocol={protocol} 
-                index={index}
-              />
-            ))}
-          </div>
-          
-          <motion.div 
-            className="mt-12 text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5 }}
-          >
-            <Link 
-              href="/protocols"
-              className="text-text-secondary hover:text-accent-red transition-colors font-mono text-sm uppercase tracking-wide inline-flex items-center space-x-2"
-            >
-              <span>View all protocols</span>
-              <motion.span
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                →
-              </motion.span>
-            </Link>
-          </motion.div>
-        </motion.div>
-      </motion.section>
-
-      {/* Tools Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-      >
-        <motion.div 
-          className="max-w-7xl mx-auto"
-          initial={{ y: 30 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.6, delay: 1.2 }}
-        >
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <h2 className="font-heading text-3xl font-bold text-text-primary mb-2 tracking-wide">
-                Integrated Tools
-              </h2>
-              <div className="h-0.5 w-32 bg-gradient-to-r from-accent-gold to-transparent" />
-            </div>
-            <LEDIndicator color="green" label="4 MODULES" />
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {tools.map((tool, index) => (
-              <ToolCard key={index} tool={tool} index={index} />
-            ))}
-          </div>
-        </motion.div>
-      </motion.section>
-
-      {/* Terminal footer */}
-      <motion.div
-        className="mt-20 text-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.5 }}
-        transition={{ delay: 2 }}
-      >
-        <div className="panel-frame bg-primary/50 inline-block px-6 py-3">
-          <div className="flex items-center space-x-6 text-xs text-text-secondary font-mono">
-            <span>SYSTEM STATUS: OPERATIONAL</span>
-            <span>•</span>
-            <span>PROTOCOLS: {featuredProtocols.length}</span>
-            <span>•</span>
-            <span>TOOLS: {tools.length}</span>
-            <span>•</span>
-            <motion.span
-              animate={{ opacity: [1, 0.5, 1] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              ● SECURE CONNECTION
-            </motion.span>
           </div>
         </div>
-      </motion.div>
+      </section>
+      
+      {/* ═══════════════════════════════════════════
+          FEATURED PROTOCOLS
+          ═══════════════════════════════════════════ */}
+      <section className="mb-24">
+        {/* Section header */}
+        <div className="flex items-center justify-between mb-12">
+          <div>
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="led led-sm led-red" />
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#606060]">
+                FEATURED
+              </span>
+            </div>
+            <h2 className="font-mono text-3xl font-bold text-white tracking-tight">
+              Executive Protocols
+            </h2>
+            <div className="h-[2px] w-24 bg-[#ff2a2a] mt-3" />
+          </div>
+          
+          <Link 
+            href="/protocols"
+            className="hidden md:flex items-center space-x-2 text-[#a0a0a0] hover:text-[#ff2a2a] transition-colors font-mono text-sm uppercase tracking-wider"
+          >
+            <span>View All</span>
+            <span>→</span>
+          </Link>
+        </div>
+        
+        {/* Protocol grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children">
+          {featuredProtocols.map((protocol) => (
+            <ProtocolCard key={protocol.id} protocol={protocol} />
+          ))}
+        </div>
+      </section>
+      
+      {/* ═══════════════════════════════════════════
+          TOOLS
+          ═══════════════════════════════════════════ */}
+      <section className="mb-24">
+        {/* Section header */}
+        <div className="flex items-center justify-between mb-12">
+          <div>
+            <div className="flex items-center space-x-3 mb-3">
+              <div className="led led-sm led-cyan" />
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#606060]">
+                INTEGRATED
+              </span>
+            </div>
+            <h2 className="font-mono text-3xl font-bold text-white tracking-tight">
+              Tool Modules
+            </h2>
+            <div className="h-[2px] w-24 bg-[#00f0ff] mt-3" />
+          </div>
+        </div>
+        
+        {/* Tools grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
+          {tools.map((tool, index) => (
+            <ToolCard key={index} tool={tool} />
+          ))}
+        </div>
+      </section>
+      
+      {/* ═══════════════════════════════════════════
+          FOOTER STATUS BAR
+          ═══════════════════════════════════════════ */}
+      <section>
+        <div className="panel-inset p-6 texture-dots">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <div className="led led-sm led-green led-static" />
+                <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#606060]">
+                  SYSTEM OPERATIONAL
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="led led-sm led-orange led-static" />
+                <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#606060]">
+                  {featuredProtocols.length} FEATURED
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="led led-sm led-cyan led-static" />
+                <span className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#606060]">
+                  {tools.length} TOOLS
+                </span>
+              </div>
+            </div>
+            
+            <div className="text-[10px] font-mono text-[#404040] uppercase tracking-wider">
+              KONKRED EXECUTION INFRASTRUCTURE
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

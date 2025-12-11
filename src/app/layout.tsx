@@ -1,18 +1,11 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Space_Grotesk } from 'next/font/google';
 import Nav from '@/components/Nav';
-import CinematicFrame from '@/components/layout/CinematicFrame';
 import { SupabaseProvider } from '@/components/providers/SupabaseProvider';
 
-const spaceGrotesk = Space_Grotesk({ 
-  subsets: ['latin'],
-  variable: '--font-space-grotesk'
-});
-
 export const metadata: Metadata = {
-  title: 'Executive Protocols - Production-ready AI systems',
-  description: 'Production-ready AI systems with structured outputs and execution-ready protocols.',
+  title: 'KONKRED - Executive Protocols',
+  description: 'Production-ready AI execution systems.',
 };
 
 export default function RootLayout({
@@ -21,15 +14,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${spaceGrotesk.variable}`}>
-      <body className="font-heading antialiased">
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+      </head>
+      <body className="antialiased">
         <SupabaseProvider>
-          <div className="min-h-screen bg-primary">
+          {/* Global laser scan */}
+          <div className="laser-global" />
+          
+          {/* Ambient glow background */}
+          <div className="ambient-glow" />
+          
+          <div className="min-h-screen relative z-10">
             <Nav />
-            <main>
-              <CinematicFrame>
-                {children}
-              </CinematicFrame>
+            <main className="pb-20">
+              {children}
             </main>
           </div>
         </SupabaseProvider>

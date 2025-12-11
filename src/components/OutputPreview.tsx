@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
 
 interface OutputPreviewProps {
   sampleOutput: string;
@@ -10,124 +9,78 @@ interface OutputPreviewProps {
 export default function OutputPreview({ sampleOutput }: OutputPreviewProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const displayLines = isExpanded 
-    ? sampleOutput.split('\n') 
-    : sampleOutput.split('\n').slice(0, 10);
+  const lines = sampleOutput.split('\n');
+  const displayLines = isExpanded ? lines : lines.slice(0, 12);
+  const hasMore = lines.length > 12;
 
   return (
-    <motion.div
-      className="panel-frame"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Header with controls */}
-      <div className="flex justify-between items-center p-4 border-b border-border">
-        <div className="flex items-center space-x-3">
-          <motion.div
-            className="w-3 h-3 bg-red-500 rounded-full"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-          <motion.div
-            className="w-3 h-3 bg-yellow-500 rounded-full"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-          />
-          <motion.div
-            className="w-3 h-3 bg-green-500 rounded-full"
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-          />
-        </div>
+    <div className="relative shadow-stack">
+      <div className="relative bg-[#0a0a0a] border-2 border-[#2a2a2a] overflow-hidden">
         
-        <div className="flex items-center space-x-4">
-          <span className="text-xs text-text-secondary font-mono uppercase tracking-wide">
-            TERMINAL OUTPUT
-          </span>
-          <motion.button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="text-accent-red hover:text-accent-gold transition-colors text-sm font-mono flex items-center space-x-1"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span>{isExpanded ? 'COLLAPSE' : 'EXPAND'}</span>
-            <motion.span
-              animate={{ rotate: isExpanded ? 180 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              ▼
-            </motion.span>
-          </motion.button>
-        </div>
-      </div>
-      
-      {/* Terminal output */}
-      <div className="relative bg-primary overflow-hidden">
-        {/* Scan line effect */}
-        <motion.div
-          className="absolute inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-terminal-green to-transparent opacity-30"
-          animate={{ y: ['-100%', '100%'] }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
-        />
-        
-        <div className="p-6 font-mono text-sm text-terminal-green overflow-x-auto">
-          {displayLines.map((line, index) => (
-            <motion.div
-              key={index}
-              className="leading-relaxed"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ 
-                duration: 0.3, 
-                delay: index * 0.05,
-                ease: 'easeOut'
-              }}
-            >
-              {line || <span>&nbsp;</span>}
-            </motion.div>
-          ))}
+        {/* Header bar */}
+        <div className="h-10 bg-[#0f0f0f] border-b border-[#2a2a2a] flex items-center justify-between px-4 texture-scanlines">
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-1">
+              <div className="w-2 h-2 bg-[#ff2a2a]" />
+              <div className="w-2 h-2 bg-[#ff6b00]" />
+              <div className="w-2 h-2 bg-[#00ff41]" />
+            </div>
+            <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[#606060]">
+              TERMINAL OUTPUT
+            </span>
+          </div>
           
-          {!isExpanded && sampleOutput.split('\n').length > 10 && (
-            <motion.div
-              className="mt-4 text-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
+          {hasMore && (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex items-center space-x-2 text-[#ff2a2a] hover:text-[#ff6b00] transition-colors text-xs font-mono uppercase tracking-wider"
             >
-              <button
-                onClick={() => setIsExpanded(true)}
-                className="text-accent-red hover:text-accent-gold transition-colors text-sm font-mono border border-accent-red/30 px-3 py-1 rounded"
-              >
-                LOAD FULL OUTPUT →
-              </button>
-            </motion.div>
+              <span>{isExpanded ? 'COLLAPSE' : 'EXPAND'}</span>
+              <span className={`transition-transform ${isExpanded ? 'rotate-180' : ''}`}>▼</span>
+            </button>
           )}
         </div>
-
-        {/* Terminal cursor effect */}
-        <motion.div
-          className="absolute bottom-4 right-4 w-2 h-4 bg-terminal-green"
-          animate={{ opacity: [1, 0, 1] }}
-          transition={{ duration: 1, repeat: Infinity }}
-        />
-      </div>
-
-      {/* Status bar */}
-      <div className="bg-secondary border-t border-border px-4 py-2 flex justify-between items-center">
-        <div className="flex items-center space-x-4 text-xs text-text-secondary font-mono">
-          <span>LINES: {sampleOutput.split('\n').length}</span>
-          <span>STATUS: ACTIVE</span>
+        
+        {/* Output content */}
+        <div className="relative p-6 bg-[#050505] texture-scanlines overflow-x-auto">
+          {/* Scan line effect */}
+          <div className="scan-line opacity-30" />
+          
+          <pre className="font-mono text-sm text-[#00ff41] leading-relaxed relative z-10">
+            {displayLines.map((line, index) => (
+              <div key={index} className="animate-fade-in" style={{ animationDelay: `${index * 30}ms` }}>
+                {line || ' '}
+              </div>
+            ))}
+          </pre>
+          
+          {/* Expand prompt */}
+          {!isExpanded && hasMore && (
+            <div className="mt-4 pt-4 border-t border-[#2a2a2a]">
+              <button
+                onClick={() => setIsExpanded(true)}
+                className="text-[#ff2a2a] hover:text-[#ff6b00] transition-colors text-xs font-mono uppercase tracking-wider"
+              >
+                + {lines.length - 12} MORE LINES
+              </button>
+            </div>
+          )}
+          
+          {/* Cursor */}
+          <div className="inline-block w-2 h-4 bg-[#00ff41] ml-1 animate-pulse" />
         </div>
-        <div className="flex items-center space-x-2">
-          <motion.div
-            className="w-1 h-1 bg-terminal-green rounded-full"
-            animate={{ opacity: [1, 0.3, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-          <span className="text-xs text-terminal-green font-mono">READY</span>
+        
+        {/* Status bar */}
+        <div className="h-8 bg-[#0f0f0f] border-t border-[#2a2a2a] flex items-center justify-between px-4">
+          <span className="text-[9px] font-mono text-[#404040] uppercase tracking-wider">
+            LINES: {lines.length}
+          </span>
+          <div className="flex items-center space-x-2">
+            <div className="led led-sm led-green led-static" />
+            <span className="text-[9px] font-mono text-[#00ff41]">READY</span>
+          </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

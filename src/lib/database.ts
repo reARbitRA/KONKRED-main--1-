@@ -53,21 +53,27 @@ export type Database = {
           id: string;
           user_id: string;
           protocol_id: string;
-          stripe_payment_id: string;
+          stripe_payment_id?: string | null;     // Made optional/nullable
+          nowpayments_payment_id?: string | null; // Added this
+          payment_status?: string | null;         // Added this
           acquired_at: string;
         };
         Insert: {
           id?: string;
           user_id: string;
           protocol_id: string;
-          stripe_payment_id: string;
+          stripe_payment_id?: string | null;
+          nowpayments_payment_id?: string | null; // Added this
+          payment_status?: string | null;         // Added this
           acquired_at?: string;
         };
         Update: {
           id?: string;
           user_id?: string;
           protocol_id?: string;
-          stripe_payment_id?: string;
+          stripe_payment_id?: string | null;
+          nowpayments_payment_id?: string | null; // Added this
+          payment_status?: string | null;         // Added this
           acquired_at?: string;
         };
       };
